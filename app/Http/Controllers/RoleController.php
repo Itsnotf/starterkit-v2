@@ -77,7 +77,6 @@ class RoleController extends Controller implements HasMiddleware
         $role = Role::findOrFail($id);
         $role->update($request->all());
 
-        // Sync permissions to handle both adding and removing permissions
         $role->syncPermissions($request->permissions);
 
         return redirect()->route("roles.index")->with("success", "roles updated successfully");

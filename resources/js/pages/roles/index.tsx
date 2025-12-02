@@ -13,8 +13,8 @@ import {
     TooltipTrigger,
 } from "@/components/ui/tooltip"
 import hasAnyPermission from '@/lib/utils';
-import { Badge } from '@/components/ui/badge';
 import DeleteButton from '@/components/delete-button';
+import { Card } from '@/components/ui/card';
 
 interface Props {
     roles: {
@@ -52,7 +52,7 @@ export default function RolePage({ roles, filters, flash }: Props) {
         router.get('/roles', { search }, { preserveState: true });
     };
 
-    
+
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -89,38 +89,45 @@ export default function RolePage({ roles, filters, flash }: Props) {
                     </TableHeader>
 
                     <TableBody>
-                        {roles.data.map((role) => (
-                            <TableRow key={role.id}>
-                                <TableCell>{role.name}</TableCell>
-                                <TableCell className="space-x-2">
-                                    {hasAnyPermission(["roles edit"]) && (
-                                        <Tooltip>
-                                            <TooltipTrigger>
-                                                <Link href={`/roles/${role.id}/edit`}>
-                                                    <Button variant="outline" size="sm" className='hover:bg-blue-200 hover:text-blue-600'>
-                                                        <Edit2Icon />
-                                                    </Button>
-                                                </Link>
-                                            </TooltipTrigger>
-                                            <TooltipContent>
-                                                Edit
-                                            </TooltipContent>
-                                        </Tooltip>
-                                    )}
-
-                                    {hasAnyPermission(["roles delete"]) && (
-                                        <Tooltip>
-                                            <TooltipTrigger>
-                                                <DeleteButton id={role.id} featured="roles" />
-                                            </TooltipTrigger>
-                                            <TooltipContent>
-                                                Delete
-                                            </TooltipContent>
-                                        </Tooltip>
-                                    )}
+                        {roles.data.length === 0 ? (
+                            <TableRow>
+                                <TableCell colSpan={8} className="h-[65vh]  text-center">
+                                    Belum Ada Data Role.
                                 </TableCell>
                             </TableRow>
-                        ))}
+                        ) : (
+                            roles.data.map((role) => (
+                                <TableRow key={role.id}>
+                                    <TableCell>{role.name}</TableCell>
+                                    <TableCell className="space-x-2">
+                                        {hasAnyPermission(["roles edit"]) && (
+                                            <Tooltip>
+                                                <TooltipTrigger>
+                                                    <Link href={`/roles/${role.id}/edit`}>
+                                                        <Button variant="outline" size="sm" className='hover:bg-blue-200 hover:text-blue-600'>
+                                                            <Edit2Icon />
+                                                        </Button>
+                                                    </Link>
+                                                </TooltipTrigger>
+                                                <TooltipContent>
+                                                    Edit
+                                                </TooltipContent>
+                                            </Tooltip>
+                                        )}
+
+                                        {hasAnyPermission(["roles delete"]) && (
+                                            <Tooltip>
+                                                <TooltipTrigger>
+                                                    <DeleteButton id={role.id} featured="roles" />
+                                                </TooltipTrigger>
+                                                <TooltipContent>
+                                                    Delete
+                                                </TooltipContent>
+                                            </Tooltip>
+                                        )}
+                                    </TableCell>
+                                </TableRow>
+                            )))}
                     </TableBody>
                 </Table>
 

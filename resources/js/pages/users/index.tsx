@@ -95,42 +95,49 @@ export default function UserPage({ users, filters, flash }: Props) {
                     </TableHeader>
 
                     <TableBody>
-                        {users.data.map((user) => (
-                            <TableRow key={user.id}>
-                                <TableCell>{user.name}</TableCell>
-                                <TableCell>{user.email}</TableCell>
-                                <TableCell>
-                                    {Array.isArray(user.roles) && user.roles.map((role, i) => (
-                                       <Badge key={i} className="mr-1">{role.name}</Badge>
-                                    ))}
-                                </TableCell>
-                                <TableCell className="space-x-2">
-                                    {hasAnyPermission(["users edit"]) && (
-                                        <Tooltip>
-                                            <TooltipTrigger>
-                                                <Link href={`/users/${user.id}/edit`}>
-                                                    <Button variant="outline" size="sm" className='hover:bg-blue-200 hover:text-blue-600'> <Edit2Icon /></Button>
-                                                </Link>
-                                            </TooltipTrigger>
-                                            <TooltipContent>
-                                                Edit
-                                            </TooltipContent>
-                                        </Tooltip>
-                                    )}
-
-                                    {hasAnyPermission(["users delete"]) && (
-                                        <Tooltip>
-                                            <TooltipTrigger>
-                                                <DeleteButton id={user.id} featured='users' />
-                                            </TooltipTrigger>
-                                            <TooltipContent>
-                                                Delete
-                                            </TooltipContent>
-                                        </Tooltip>
-                                    )}
+                        {users.data.length === 0 ? (
+                            <TableRow>
+                                <TableCell colSpan={8} className="h-[65vh]  text-center">
+                                    Belum Ada Data Perusahaan.
                                 </TableCell>
                             </TableRow>
-                        ))}
+                        ) : (
+                            users.data.map((user) => (
+                                <TableRow key={user.id}>
+                                    <TableCell>{user.name}</TableCell>
+                                    <TableCell>{user.email}</TableCell>
+                                    <TableCell>
+                                        {Array.isArray(user.roles) && user.roles.map((role, i) => (
+                                            <Badge key={i} className="mr-1">{role.name}</Badge>
+                                        ))}
+                                    </TableCell>
+                                    <TableCell className="space-x-2">
+                                        {hasAnyPermission(["users edit"]) && (
+                                            <Tooltip>
+                                                <TooltipTrigger>
+                                                    <Link href={`/users/${user.id}/edit`}>
+                                                        <Button variant="outline" size="sm" className='hover:bg-blue-200 hover:text-blue-600'> <Edit2Icon /></Button>
+                                                    </Link>
+                                                </TooltipTrigger>
+                                                <TooltipContent>
+                                                    Edit
+                                                </TooltipContent>
+                                            </Tooltip>
+                                        )}
+
+                                        {hasAnyPermission(["users delete"]) && (
+                                            <Tooltip>
+                                                <TooltipTrigger>
+                                                    <DeleteButton id={user.id} featured='users' />
+                                                </TooltipTrigger>
+                                                <TooltipContent>
+                                                    Delete
+                                                </TooltipContent>
+                                            </Tooltip>
+                                        )}
+                                    </TableCell>
+                                </TableRow>
+                            )))}
                     </TableBody>
                 </Table>
 
