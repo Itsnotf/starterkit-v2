@@ -67,7 +67,7 @@ export default function RoleCreatePage({ permissions }: Props) {
                                                     name="permissions[]"
                                                     value={permission.name}
                                                 />
-                                                <span>{permission.name}</span>
+                                                <span>{permission.label}</span>
                                             </label>
                                         ))}
                                     </div>

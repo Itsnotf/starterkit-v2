@@ -67,7 +67,7 @@ export default function RoleEditPage({ role, permissions }: Props) {
                                                         (p) => p.id === permission.id
                                                     )}
                                                 />
-                                                <span>{permission.name}</span>
+                                                <span>{permission.label}</span>
 
                                             </label>
                                         ))}

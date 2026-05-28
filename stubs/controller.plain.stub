@@ -1,0 +1,22 @@
+<?php
+
+namespace {{ namespace }};
+
+use {{ rootNamespace }}Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
+
+class {{ class }} extends Controller implements HasMiddleware
+{
+    // Sesuaikan nama resource dengan permission di config/starterkit.php
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('permission: index',  only: ['index']),
+            new Middleware('permission: create', only: ['create', 'store']),
+            new Middleware('permission: edit',   only: ['edit', 'update']),
+            new Middleware('permission: delete', only: ['destroy']),
+        ];
+    }
+}

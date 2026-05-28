@@ -23,7 +23,7 @@ class CreateRoleRequest extends FormRequest
     {
         return [
             "name"=> "required|string|max:255|unique:roles,name",
-            "permissions"=> "required|array",
+            "permissions"=> "nullable|array",
             "permissions.*"=> "string|exists:permissions,name",
         ];
     }

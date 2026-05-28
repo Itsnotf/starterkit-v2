@@ -12,18 +12,7 @@ class PermissionSeeder extends Seeder
      */
     public function run(): void
     {
-        $permissions = [
-            'users index',
-            'users create',
-            'users edit',
-            'users delete',
-            'roles index',
-            'roles create',
-            'roles edit',
-            'roles delete',
-        ];
-
-        foreach ($permissions as $permission) {
+        foreach (array_keys(config('starterkit.permissions')) as $permission) {
             \Spatie\Permission\Models\Permission::create(['name' => $permission]);
         }
     }

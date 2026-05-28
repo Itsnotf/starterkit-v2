@@ -1,0 +1,61 @@
+<?php
+
+namespace {{ namespace }};
+
+use {{ namespacedModel }};
+use {{ rootNamespace }}Http\Controllers\Controller;
+use {{ namespacedRequests }}
+use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
+
+class {{ class }} extends Controller implements HasMiddleware
+{
+    public function __construct(private {{ model }}Service ${{ modelVariable }}Service) {}
+
+    // Sesuaikan nama resource dengan permission di config/starterkit.php
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('permission:{{ modelVariable }} index',  only: ['index']),
+            new Middleware('permission:{{ modelVariable }} create', only: ['create', 'store']),
+            new Middleware('permission:{{ modelVariable }} edit',   only: ['edit', 'update']),
+            new Middleware('permission:{{ modelVariable }} delete', only: ['destroy']),
+        ];
+    }
+
+    public function index(Request $request)
+    {
+        //
+    }
+
+    public function create()
+    {
+        //
+    }
+
+    public function store({{ storeRequest }} $request)
+    {
+        //
+    }
+
+    public function show({{ model }} ${{ modelVariable }})
+    {
+        //
+    }
+
+    public function edit({{ model }} ${{ modelVariable }})
+    {
+        //
+    }
+
+    public function update({{ updateRequest }} $request, {{ model }} ${{ modelVariable }})
+    {
+        //
+    }
+
+    public function destroy({{ model }} ${{ modelVariable }})
+    {
+        //
+    }
+}

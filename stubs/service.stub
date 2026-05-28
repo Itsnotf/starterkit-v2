@@ -1,0 +1,40 @@
+<?php
+
+namespace App\Services;
+
+use App\Models\{{ model }};
+use Illuminate\Pagination\LengthAwarePaginator;
+
+class {{ class }}
+{
+    public function getAll(?string $search): LengthAwarePaginator
+    {
+        return {{ model }}::query()
+            ->when($search, fn($q) => $q->where('name', 'like', "%{$search}%"))
+            ->paginate(config('starterkit.pagination'))
+            ->withQueryString();
+    }
+
+    public function findById(string $id): {{ model }}
+    {
+        return {{ model }}::findOrFail($id);
+    }
+
+    public function create(array $data): {{ model }}
+    {
+        return {{ model }}::create($data);
+    }
+
+    public function update(string $id, array $data): {{ model }}
+    {
+        $record = $this->findById($id);
+        $record->update($data);
+
+        return $record;
+    }
+
+    public function delete(string $id): void
+    {
+        $this->findById($id)->delete();
+    }
+}

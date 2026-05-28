@@ -12,16 +12,11 @@ class RoleSeeder extends Seeder
      */
     public function run(): void
     {
-        $roles = [
-            'admin',
-            'user',
-        ];
-
-        foreach ($roles as $role) {
+        foreach (config('starterkit.roles') as $role) {
             \Spatie\Permission\Models\Role::create(['name' => $role]);
         }
 
-        $admin = \Spatie\Permission\Models\Role::findByName('admin');;
-        $admin->givePermissionTo(\Spatie\Permission\Models\Permission::all());  
+        $admin = \Spatie\Permission\Models\Role::findByName(config('starterkit.default_admin_role'));
+        $admin->givePermissionTo(\Spatie\Permission\Models\Permission::all());
     }
 }

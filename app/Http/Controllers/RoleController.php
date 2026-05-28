@@ -4,88 +4,67 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\RoleRequest\CreateRoleRequest;
 use App\Http\Requests\RoleRequest\UpdateRoleRequest;
+use App\Services\RoleService;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
-use Inertia\Inertia;
-use Spatie\Permission\Models\Permission;
-use Spatie\Permission\Models\Role;
 
 class RoleController extends Controller implements HasMiddleware
 {
+    public function __construct(private RoleService $roleService) {}
+
     public static function middleware()
     {
         return [
-            new Middleware('permission:roles index', only: ['index']),
+            new Middleware('permission:roles index',  only: ['index']),
             new Middleware('permission:roles create', only: ['create', 'store']),
-            new Middleware('permission:roles edit', only: ['edit', 'update   ']),
+            new Middleware('permission:roles edit',   only: ['edit', 'update']),
             new Middleware('permission:roles delete', only: ['destroy']),
         ];
     }
 
     public function index(Request $request)
     {
-        $roles = Role::with('permissions')->when($request->search, function ($query, $search) {
-                $query->where('name', 'like', "%{$search}%");
-            })
-            ->paginate(8)
-            ->withQueryString();
-
         return inertia('roles/index', [
-            'roles' => $roles,
+            'roles'   => $this->roleService->getAll($request->search),
             'filters' => $request->only('search'),
-            'flash' => [
-                'success' => session('success'),
-            ],
+            'flash'   => ['success' => session('success')],
         ]);
     }
 
-
     public function create()
     {
-        $permissions = Permission::all();
-        return Inertia::render("roles/create", [
-            "permissions" => $permissions
+        return inertia('roles/create', [
+            'permissions' => $this->roleService->getPermissions(),
         ]);
     }
 
     public function store(CreateRoleRequest $request)
     {
-        $role = Role::create([
-            "name" => $request->name,
-            "guard_name" => 'web',
-        ]);
+        $this->roleService->create($request->name, $request->permissions);
 
-        $role->givePermissionTo($request->permissions);
-
-        return redirect()->route("roles.index")->with("success", "roles created successfully");
+        return redirect()->route('roles.index')->with('success', 'roles created successfully');
     }
-
 
     public function edit(string $id)
     {
-        $role = Role::with('permissions')->findOrFail($id);
-        $permissions = Permission::all();
-        return Inertia::render("roles/edit", [
-            "role" => $role,
-            "permissions" => $permissions
+        return inertia('roles/edit', [
+            'role'        => $this->roleService->findById($id),
+            'permissions' => $this->roleService->getPermissions(),
         ]);
     }
 
     public function update(UpdateRoleRequest $request, string $id)
     {
-        $role = Role::findOrFail($id);
-        $role->update($request->all());
+        $this->roleService->update($id, $request->name, $request->permissions);
 
-        $role->syncPermissions($request->permissions);
-
-        return redirect()->route("roles.index")->with("success", "roles updated successfully");
+        return redirect()->route('roles.index')->with('success', 'roles updated successfully');
     }
 
-    public function destroy($id)
+    public function destroy(string $id)
     {
-        $role = Role::findOrFail($id);
-        $role->delete();
-        return redirect()->route("roles.index")->with("success", "roles deleted successfully");
+        $this->roleService->delete($id);
+
+        return redirect()->route('roles.index')->with('success', 'roles deleted successfully');
     }
 }

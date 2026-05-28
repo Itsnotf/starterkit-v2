@@ -48,10 +48,11 @@ export interface User {
     export interface Permission {
         id: number;
         name: string;
+        label: string;
         guard_name: string;
         created_at: string;
         updated_at: string;
-        [key: string]: boolean;
+        [key: string]: unknown;
     }
 
 export interface Role {
